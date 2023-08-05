@@ -1,84 +1,156 @@
-// document.body.innerHTML = "<h1>Hello from JavaScript</h1>";
+/*
+  총 4개의 practice 가 있고,
+  if 내의 false 를 true 로 바꿔서
+  하나 하나 실행해보세요.
+*/
 
-// 1. document.createElement("태그명")
-// const h1 = document.createElement("h1");
-
-// 텍스트 추가
-// h1.innerText = "Hello from JavaScript";
-
-// 스타일 추가
-// h1.style.color = "red";
-// h1.style.textAlign = "center";
-
-// 클래스 추가
-// h1.classList.add("heading");
-// 클래스 제거
-// h1.classList.remove("heading");
-
-// 2. document.body.appendChild(요소)
-// document.body.appendChild(h1);
-// document.body.prepend(h1);
-
-// 3. document.body.insertBefore(요소, 기준요소)
-// const h2 = document.createElement("h2");
-// h2.innerText = "goodBye from JavaScript";
-// document.body.insertBefore(h2, h1);
-
-// 4. document.querySelector(선택자)
-// const heading = document.querySelector(".heading");
-// const heading = document.querySelector("#heading");
-// const heading = document.querySelector("h1");
-
-// 5. document.querySelectorAll(선택자)
-// const heading = document.querySelectorAll(".heading");
-// const heading = document.querySelectorAll("#heading");
-// const heading = document.querySelectorAll("h1");
-
-// 2 of 6
-
-document.querySelector("#app").innerHTML = `
-  <button type="button" class="hello1">Hello 1</button>
-  <button type="button" class="hello2">Hello 2</button>
-  <button type="button" class="hello3">Hello 3</button>
-
-  <div class="box">
-    <input type="text" class="name" placeholder="Enter your name:" />
-  </div>    
-
-  <div class="parent">
-    <button type="button" class="btn">
-      <span>Click</span>
-      <span>me</span>
-    </button>
-  </div>
-
+// begin - practice #1
+if (1) {
+  document.querySelector("#app").innerHTML = `
+    <button type="button" class="hello1">Check the input</button>
+    <button type="button" class="hello2">Hello2</button>
+    <button type="button" class="hello3">Hello3</button>
+  
+    <div>
+      <input class="name" type="text" placeholder="Type your name:" />
+    </div>
+  
+    <div class="parent-of-button">
+      <button class="helloworld-button" type="button">
+        <span>Hello</span>
+        <span>World</span>
+      </button>
+    </div>
   `;
 
-document.querySelector("button").addEventListener("click", (e) => {
-  const input = document.querySelector(".name");
-  console.log(input.value);
-});
+  document.querySelector("button").addEventListener("click", (event) => {
+    const input = document.querySelector(".name");
+    console.log(input.value);
+  });
 
-// change 이벤트는 바뀔 때마다 발생 하지 않는다.
-document.querySelector(".name").addEventListener("change", (e) => {
-  console.log(e.target.value);
-});
+  document.querySelector(".name").addEventListener("input", (event) => {
+    console.log(event.target.value);
+  });
 
-// input 이벤트는 바뀔 때마다 발생 한다.
-document.querySelector(".name").addEventListener("input", (e) => {
-  console.log(e.target.value);
-});
+  document
+    .querySelector(".helloworld-button")
+    .addEventListener("click", (event) => {
+      event.stopPropagation();
+      console.log("event from button", event);
+    });
 
-// 이벤트 버블링
-document.querySelector(".btn").addEventListener("click", (e) => {
-  // 버블링이 일어나면서 parent, btn, span 순으로 출력된다.
+  document
+    .querySelector(".parent-of-button")
+    .addEventListener("click", (event) => {
+      console.log("event from div", event);
+    });
 
-  // 버블링을 막는 방법
-  // e.stopPropagation();
+  document.querySelector(".name").addEventListener("keyup", (event) => {
+    console.log("input keyup", event);
+  });
 
-  console.log("btn");
-});
+  document.body.addEventListener("keyup", (event) => {
+    console.log(event.key);
+  });
+}
+// end - practice #1
 
-document.querySelector(".parent").addEventListener("click", (e) => {
-  console.log("parent");
-});
+// begin - practice #2
+if (false) {
+  document.querySelector("#app").innerHTML = `
+  <input />
+  <button>Click</button>
+`;
+
+  document.querySelector("button").addEventListener("click", () => {
+    const currentValue = document.querySelector("input").value;
+
+    document.querySelector("input").value = currentValue + "*";
+  });
+
+  let count = 0;
+  setInterval(() => {
+    count += 1;
+    document.querySelector("#app").innerHTML = `
+    <input />
+    <button>Click</button>
+    <p>count: ${count}</p>
+  `;
+  }, 5000);
+}
+// end - practice #2
+
+// practice #3
+if (false) {
+  document.querySelector("#app").innerHTML = `
+    <button class="btn-add-card" type="button">Add card</button>
+  
+    <div class="cards"></div>
+  `;
+
+  let cardCount = 0;
+  // const cards = [
+
+  // ]
+
+  document.querySelector(".btn-add-card").addEventListener("click", () => {
+    cardCount += 1;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <p>Card #${cardCount}</p>
+      <button class="btn-hello" type="button" data-number="${cardCount}">hello</button>
+    `;
+    const myCardCount = cardCount;
+    // card.querySelector(".btn-hello").addEventListener("click", () => {
+    //   console.log(`💡 hello! ${myCardCount}`);
+    // });
+    document.querySelector(".cards").appendChild(card);
+  });
+
+  document.querySelector(".cards").addEventListener("click", (event) => {
+    // console.log("click from .cards", event);
+    const maybeButton = event.target;
+    if (maybeButton.matches(".btn-hello")) {
+      // const cardName = maybeButton.parentElement.children[0].innerText;
+      // const cardNumber = parseInt(cardName.split(" ")[1].slice(1), 10);
+      // console.log("button is clicked!", cardNumber);
+      console.log(
+        "button is clicked!",
+        maybeButton.getAttribute("data-number")
+      );
+    } else {
+      console.log("something else. let's ignore this.");
+    }
+  });
+}
+// end - practice #3
+
+// begin - practice #4
+// 영상엔 없는 보너스 예제!
+// 네모 상자 안에 마우스를 올려 놓으면 그 좌표를 찍어서 보여줍니다.
+if (false) {
+  document.querySelector("#app").innerHTML = `
+    <div class="practice-4">
+      <div class="box"></div>
+      <div class="info">sdf</div>
+    </div>
+  `;
+
+  const container = document.querySelector(".practice-4");
+  const box = container.querySelector(".box");
+  const info = container.querySelector(".info");
+
+  box.addEventListener("mouseenter", (event) => {
+    container.classList.add("hover");
+  });
+  box.addEventListener("mouseleave", (event) => {
+    container.classList.remove("hover");
+  });
+  box.addEventListener("mousemove", (event) => {
+    info.innerHTML = `
+      Mouse position: (${event.x}, ${event.y})
+    `;
+  });
+}
+// end - practice #4
