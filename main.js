@@ -5,7 +5,7 @@
 */
 
 // begin - practice #1
-if (1) {
+if (false) {
   document.querySelector("#app").innerHTML = `
     <button type="button" class="hello1">Check the input</button>
     <button type="button" class="hello2">Hello2</button>
@@ -64,7 +64,6 @@ if (false) {
 
   document.querySelector("button").addEventListener("click", () => {
     const currentValue = document.querySelector("input").value;
-
     document.querySelector("input").value = currentValue + "*";
   });
 
@@ -133,12 +132,15 @@ if (false) {
   document.querySelector("#app").innerHTML = `
     <div class="practice-4">
       <div class="box"></div>
-      <div class="info">sdf</div>
+      <div class="info">here is info</div>
     </div>
   `;
 
   const container = document.querySelector(".practice-4");
   const box = container.querySelector(".box");
+  box.style.width = "200px";
+  box.style.height = "200px";
+  box.style.backgroundColor = "red";
   const info = container.querySelector(".info");
 
   box.addEventListener("mouseenter", (event) => {
