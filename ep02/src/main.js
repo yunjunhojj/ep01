@@ -15,6 +15,28 @@ const getProducts = async () => {
   return products;
 };
 
+const getProdectsElement = (products, count = 0) => {
+  return products
+    .map((product) => {
+      const { name, images } = product;
+      return `
+      <div class="product" data-product-id="${product.id}">
+        <img src="${images[0]}" alt="${name}" />
+        <div class="product__name">${name}</div>
+        <div class="product__buttons flex items-center justify-between">
+          <div class="product__price">₩${product.regularPrice.toLocaleString()}</div>
+          <div>
+            <button class="product__button-decrease bg-green-200 hover:bg-green-3 py-1 px-3 ">-</button>
+            <span class="cart-count">${count}</span>
+            <button class="product__button-increase bg-green-200 hover:bg-green-3 py-1 px-3 ">+</button>
+          </div>
+        </div>
+      </div>
+    `;
+    })
+    .join("");
+};
+
 const findElement = (startingElement, selector) => {
   let currentElement = startingElement;
   while (!currentElement.matches(selector)) {
@@ -29,43 +51,20 @@ const sumAllCartCount = (countMap) => {
 
 async function main() {
   const products = await getProducts();
+  const productMap = {};
+  products.forEach((product) => {
+    productMap[product.id] = product;
+  });
+
   const countMap = {};
 
-  document.querySelector("#products").innerHTML = products
-    .map((product, index) => {
-      const { name, images } = product;
-      let minusButton = `<button class="product__button-decrease disabled:opacity-50  bg-green-200 hover:bg-green-3 py-1 px-3 ">-</button>`;
-
-      // 0 일 경우 - 버튼 비활성화
-      if (countMap[index] === 0 || countMap[index] === undefined) {
-        minusButton = `<button disabled class="product__button-decrease disabled:opacity-50  bg-green-200 hover:bg-green-3 py-1 px-3 ">-</button>`;
-      }
-
-      return `
-      <div class="product" data-product-id="${
-        product.id
-      }" data-product-index="${index}">
-        <img src="${images[0]}" alt="${name}" />
-        <div class="product__name">${name}</div>
-        <div class="product__buttons flex items-center justify-between">
-          <div class="product__price">₩${product.regularPrice.toLocaleString()}</div>
-          <div>
-            ${minusButton}
-            <span class="cart-count">${countMap[index] || 0}</span>
-            <button class="product__button-increase bg-green-200 hover:bg-green-3 py-1 px-3 ">+</button>
-          </div>
-        </div>
-      </div>
-    `;
-    })
-    .join("");
+  document.querySelector("#products").innerHTML = getProdectsElement(products);
 
   document.querySelector("#products").addEventListener("click", (event) => {
     const { target: targetElement } = event;
     const productElement = findElement(targetElement, ".product");
     const productId = productElement.dataset.productId;
-    const productIndex = productElement.dataset.productIndex;
-    const product = products[productIndex];
+    const product = productMap[productId];
 
     if (
       targetElement.matches(".product__button-increase") ||
@@ -91,7 +90,25 @@ async function main() {
 
       document.querySelector(".total-count").innerText =
         sumAllCartCount(countMap);
+
+      const productIds = Object.keys(countMap);
+      document.querySelector(".cart-items").innerHTML = getProdectsElement(
+        productIds.map((productId) => productMap[productId]),
+        countMap[productId]
+      );
     }
+  });
+
+  document.querySelector("#cart-button").addEventListener("click", (event) => {
+    document.querySelector("#cart-layer").classList.remove("hidden");
+  });
+
+  document.querySelector("#close-cart").addEventListener("click", (event) => {
+    document.querySelector("#cart-layer").classList.add("hidden");
+  });
+
+  document.querySelector(".cart-dimmed").addEventListener("click", (event) => {
+    document.querySelector("#cart-layer").classList.add("hidden");
   });
 }
 

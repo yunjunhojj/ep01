@@ -19,7 +19,7 @@
         </h1>
         <button
           type="button"
-          id="btn"
+          id="cart-button"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           <span>cart</span>
@@ -30,18 +30,19 @@
         id="products"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 relative"
       ></div>
-      <div id="cart" class="mt-4 fixed inset-0 hidden">
-        <div class="fixed inset-0 w-1/2 bg-black opacity-50"></div>
+
+      <div id="cart-layer" class="mt-4 fixed inset-0 hidden">
+        <div class="cart-dimmed fixed inset-0 w-1/2 bg-black opacity-50"></div>
         <div class="fixed right-0 top-0 bottom-0 w-1/2 bg-white">
           <button
             type="button"
-            id="close"
+            id="close-cart"
             class="absolute right-0 top-0 text-3xl font-bold"
           >
             &times;
           </button>
+          <div class="cart-items py-4 px-8 grid grid-cols-1 gap-4"></div>
         </div>
-        <div class="cart-items"></div>
       </div>
     </div>
     <script type="module" src="/src/main.js"></script>
